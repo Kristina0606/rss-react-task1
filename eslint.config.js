@@ -1,29 +1,58 @@
-import js from '@eslint/js'
-import globals from 'globals'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
-import { defineConfig, globalIgnores } from 'eslint/config'
+import js from '@eslint/js';
+import globals from 'globals';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
+import { defineConfig } from 'eslint/config';
+import eslintReactHooks from 'eslint-plugin-react-hooks';
+import eslintReactRefresh from 'eslint-plugin-react-refresh';
+import eslintConfigPrettier from 'eslint-config-prettier';
+import prettierPlugin from 'eslint-plugin-prettier';
+/** @type {import('eslint').Linter.Config[]} */
 
-export default defineConfig([
-  globalIgnores(['dist']),
+export default tseslint.config(
   {
-    files: ['**/*.{js,jsx}'],
-    extends: [
-      js.configs.recommended,
-      reactHooks.configs['recommended-latest'],
-      reactRefresh.configs.vite,
-    ],
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
+    plugins: {
+      js,
+      '@typescript-eslint': tseslint.plugin,
+      'react-hooks': eslintReactHooks,
+      react: pluginReact,
+      'react-refresh': eslintReactRefresh,
+      prettier: prettierPlugin,
+    },
+    extends: [js.configs.recommended, pluginReact.configs.flat['jsx-runtime']],
+  },
+  { ignores: ['node_modules', 'dist', 'eslint.config.js', 'vite.config.js'] },
+  {
     languageOptions: {
-      ecmaVersion: 2020,
-      globals: globals.browser,
+      globals: { ...globals.browser, ...globals.node, ...globals.es2021 },
       parserOptions: {
-        ecmaVersion: 'latest',
-        ecmaFeatures: { jsx: true },
+        project: './tsconfig.json',
+        ecmaVersion: 2020,
         sourceType: 'module',
+        ecmaFeatures: {
+          jsx: true,
+        },
       },
     },
+  },
+  {
+    files: ['**/*.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
     rules: {
-      'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
+      ...eslintConfigPrettier.rules,
+      'prefer-const': 'error',
+      'react/react-in-jsx-scope': 'off',
     },
   },
-])
+  ...tseslint.configs.recommended,
+  js.configs.recommended,
+  pluginReact.configs.flat.recommended,
+  pluginReact.configs.flat['jsx-runtime'],
+  {
+    settings: {
+      react: {
+        version: 'detect',
+      },
+    },
+  },
+);
