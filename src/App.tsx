@@ -1,21 +1,24 @@
-// import { useState } from 'react';
-// import reactLogo from './assets/react.svg';
-// import viteLogo from '/vite.svg';
-
-import Results from './components/results';
+import { Component } from 'react';
+import PokemonsNames from './components/results';
 import SearchBar from './components/top-controls';
+import { PokemonData } from './components/top-controls';
 
-function App() {
-  return (
-    <>
-      <header>
-        <SearchBar />
-      </header>
-      <main>
-        <Results />
-      </main>
-    </>
-  );
+class App extends Component {
+  handlePokemonLoad(data: PokemonData) {
+    this.setState({ pokemonData: data });
+  }
+  render() {
+    return (
+      <>
+        <header>
+          <PokemonsNames />
+        </header>
+        <main>
+          <SearchBar />
+        </main>
+      </>
+    );
+  }
 }
 
 export default App;

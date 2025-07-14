@@ -10,7 +10,7 @@ interface State {
   loading: boolean;
 }
 
-class Results extends Component<object, State> {
+class PokemonsNames extends Component<object, State> {
   constructor(props: object) {
     super(props);
     this.state = {
@@ -50,4 +50,4 @@ class Results extends Component<object, State> {
   }
 }
 
-export default Results;
+export default PokemonsNames;
