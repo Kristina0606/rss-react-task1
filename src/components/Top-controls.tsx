@@ -15,14 +15,12 @@ export interface PokemonData {
 interface SearchState {
   pokemon: PokemonData | null;
   loading: boolean;
-  error: string | null;
 }
 
 class SearchBar extends Component<object, SearchState> {
   state: SearchState = {
     pokemon: null,
     loading: false,
-    error: null,
   };
 
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -31,7 +29,7 @@ class SearchBar extends Component<object, SearchState> {
     const name = formData.get('name')?.toString().toLowerCase();
     if (!name) return;
 
-    this.setState({ loading: true, error: null });
+    this.setState({ loading: true });
     try {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       if (!res.ok) throw new Error('Покемона нет');
@@ -50,7 +48,7 @@ class SearchBar extends Component<object, SearchState> {
   };
 
   render(): ReactNode {
-    const { pokemon, loading, error } = this.state;
+    const { pokemon, loading } = this.state;
 
     return (
       <div>
@@ -99,7 +97,6 @@ class SearchBar extends Component<object, SearchState> {
             </div>
           )}
           {loading && <p>Загрузка…</p>}
-          {error && <p className="text-red-500">Ошибка: {error}</p>}
         </div>
       </div>
     );
