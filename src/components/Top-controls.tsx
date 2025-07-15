@@ -35,16 +35,14 @@ class SearchBar extends Component<object, SearchState> {
     try {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       if (!res.ok) {
-        this.setState({ isError: true, loading: false });
+        this.setState({ isError: true, loading: false, pokemon: null });
         return;
       }
       const data: PokemonData = await res.json();
-      this.setState({ pokemon: data });
+      this.setState({ pokemon: data, isError: false });
     } catch (err: unknown) {
       if (err instanceof Error) {
-        this.setState({ isError: true });
-      } else {
-        this.setState({ isError: true });
+        this.setState({ isError: true, pokemon: null });
       }
     } finally {
       this.setState({ loading: false });
@@ -77,6 +75,11 @@ class SearchBar extends Component<object, SearchState> {
           </form>
         </div>
         <div className="pokemon-block flex justify-start items-center flex-col">
+          {isError && (
+            <p className="text-red-200">
+              Покемон не найден или произошла ошибка
+            </p>
+          )}
           {pokemon && (
             <div>
               <img
@@ -101,11 +104,6 @@ class SearchBar extends Component<object, SearchState> {
             </div>
           )}
           {loading && <p>Загрузка…</p>}
-          {isError && (
-            <p className="text-red-200">
-              Покемон не найден или произошла ошибка
-            </p>
-          )}
         </div>
       </div>
     );
