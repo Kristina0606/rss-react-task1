@@ -3,6 +3,7 @@ import PokemonsNames from './components/results';
 import SearchBar from './components/top-controls';
 import { PokemonData } from './components/top-controls';
 import ErrorBoundary from './components/ErrorBoundary';
+import ErrorButton from './components/ErrorButton';
 
 class App extends Component {
   handlePokemonLoad(data: PokemonData) {
@@ -18,6 +19,7 @@ class App extends Component {
           </header>
           <main>
             <SearchBar />
+            <ErrorButton />
           </main>
         </ErrorBoundary>
       </>
