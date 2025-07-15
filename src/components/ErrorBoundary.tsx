@@ -1,4 +1,4 @@
-import { Component, PropsWithChildren, ReactNode, ErrorInfo } from 'react';
+import { Component, PropsWithChildren, ReactNode } from 'react';
 
 interface ErrorState {
   isError: boolean;
@@ -14,10 +14,6 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
   // eslint-disable-next-line no-unused-vars, @typescript-eslint/no-unused-vars
   static getDerivedStateFromError(_error: Error): ErrorState {
     return { isError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error('Пойманная ошибка:', error, errorInfo.componentStack);
   }
 
   render(): ReactNode {

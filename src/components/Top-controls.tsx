@@ -15,12 +15,14 @@ export interface PokemonData {
 interface SearchState {
   pokemon: PokemonData | null;
   loading: boolean;
+  isError: boolean;
 }
 
 class SearchBar extends Component<object, SearchState> {
   state: SearchState = {
     pokemon: null,
     loading: false,
+    isError: false,
   };
 
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -32,15 +34,17 @@ class SearchBar extends Component<object, SearchState> {
     this.setState({ loading: true });
     try {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
-      if (!res.ok) throw new Error('Покемона нет');
+      if (!res.ok) {
+        this.setState({ isError: true, loading: false });
+        return;
+      }
       const data: PokemonData = await res.json();
       this.setState({ pokemon: data });
-      console.log('я тут', data);
     } catch (err: unknown) {
       if (err instanceof Error) {
-        console.error('Ошибка при загрузке:', err.message);
+        this.setState({ isError: true });
       } else {
-        console.error('Неизвестная ошибка:', err);
+        this.setState({ isError: true });
       }
     } finally {
       this.setState({ loading: false });
@@ -48,7 +52,7 @@ class SearchBar extends Component<object, SearchState> {
   };
 
   render(): ReactNode {
-    const { pokemon, loading } = this.state;
+    const { pokemon, loading, isError } = this.state;
 
     return (
       <div>
@@ -97,6 +101,11 @@ class SearchBar extends Component<object, SearchState> {
             </div>
           )}
           {loading && <p>Загрузка…</p>}
+          {isError && (
+            <p className="text-red-200">
+              Покемон не найден или произошла ошибка
+            </p>
+          )}
         </div>
       </div>
     );
