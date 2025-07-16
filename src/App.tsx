@@ -1,35 +1,30 @@
-import { useState } from 'react';
-import reactLogo from './assets/react.svg';
-import viteLogo from '/vite.svg';
-import './App.css';
+import { Component } from 'react';
+import PokemonsNames from './components/results';
+import SearchBar from './components/top-controls';
+import { PokemonData } from './components/top-controls';
+import ErrorBoundary from './components/ErrorBoundary';
+import ErrorButton from './components/ErrorButton';
 
-function App() {
-  const [count, setCount] = useState(0);
+class App extends Component {
+  handlePokemonLoad(data: PokemonData) {
+    this.setState({ pokemonData: data });
+  }
 
-  return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank" rel="noopener noreferrer">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank" rel="noopener noreferrer">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1 className="text-3xl font-bold underline">Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  );
+  render() {
+    return (
+      <>
+        <ErrorBoundary>
+          <header>
+            <PokemonsNames />
+          </header>
+          <main>
+            <SearchBar />
+            <ErrorButton />
+          </main>
+        </ErrorBoundary>
+      </>
+    );
+  }
 }
 
 export default App;
