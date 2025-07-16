@@ -31,7 +31,7 @@ class SearchBar extends Component<object, SearchState> {
     const name = formData.get('name')?.toString().toLowerCase();
     if (!name) return;
 
-    this.setState({ loading: true });
+    this.setState({ loading: true, isError: false });
     try {
       const res = await fetch(`https://pokeapi.co/api/v2/pokemon/${name}`);
       if (!res.ok) {
