@@ -25,6 +25,17 @@ class SearchBar extends Component<object, SearchState> {
     isError: false,
   };
 
+  async componentDidMount(): Promise<void> {
+    if (localStorage.getItem('pokemon')) {
+      const pokeName = localStorage.getItem('pokemon');
+      const response = await fetch(
+        `https://pokeapi.co/api/v2/pokemon/${pokeName}`
+      );
+      const data = await response.json();
+      this.setState({ pokemon: data, isError: false, loading: false });
+    }
+  }
+
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
@@ -51,7 +62,9 @@ class SearchBar extends Component<object, SearchState> {
 
   render(): ReactNode {
     const { pokemon, loading, isError } = this.state;
-
+    if (pokemon) {
+      localStorage.setItem('pokemon', pokemon.species.name);
+    }
     return (
       <div>
         <div className="search-box bg-blue-100 p-10">
