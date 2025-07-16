@@ -28,7 +28,7 @@ class SearchBar extends Component<object, SearchState> {
   handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
-    const name = formData.get('name')?.toString().toLowerCase();
+    const name = formData.get('name')?.toString().toLowerCase().trim();
     if (!name) return;
 
     this.setState({ loading: true, isError: false });
