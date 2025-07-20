@@ -1,7 +1,7 @@
 import { Component } from 'react';
-import PokemonsNames from './components/results';
-import SearchBar from './components/top-controls';
-import { PokemonData } from './components/top-controls';
+import PokemonsNames from './components/Results';
+import SearchBar from './components/Top-controls';
+import { PokemonData } from './components/Top-controls';
 import ErrorBoundary from './components/ErrorBoundary';
 import ErrorButton from './components/ErrorButton';
 
