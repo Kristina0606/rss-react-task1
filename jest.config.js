@@ -2,13 +2,14 @@
 
 const config = {
   collectCoverage: true,
-  collectCoverageFrom: ['src/**/*.{js, jsx, ts, tsx}'],
+  collectCoverageFrom: [
+    'src/**/*.{ts,tsx}',
+    '!src/**/*.d.ts',
+    '!src/**/*.test.{ts,tsx}',
+  ],
   coveragePathIgnorePatterns: [
-    'src/**/*.test.{js,jsx,ts,tsx}',
-    'src/**/*.spec.{js,jsx,ts,tsx}',
-    'src/index.{js,jsx,ts,tsx}',
-    'src/setupTests.{js,ts}',
-    'src/**/*.d.ts',
+    '^<rootDir>/src/index\\.(js|jsx|ts|tsx)$',
+    '^<rootDir>/src/setup-tests\\.(js|ts)$',
   ],
   coverageDirectory: 'coverage',
   testEnvironment: 'jsdom',
