@@ -48,4 +48,22 @@ describe('Results component', () => {
     const resultsBlock = screen.getByTestId('results-block');
     expect(resultsBlock.childElementCount).toBe(15);
   });
+
+  it('Displays error message when API call fails', async () => {
+    const errorSpy = jest.spyOn(console, 'error').mockImplementation(() => {});
+    const mockFetchFunc = jest.fn();
+    const mockResponse = {
+      json: jest.fn().mockRejectedValue(new Error('i am error')) as jest.Mock,
+    };
+
+    mockFetchFunc.mockResolvedValue(mockResponse);
+    globalThis.fetch = mockFetchFunc;
+
+    await act(async () => {
+      render(<Results />);
+    });
+
+    expect(errorSpy).toHaveBeenCalledTimes(1);
+    errorSpy.mockRestore();
+  });
 });

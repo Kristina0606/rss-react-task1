@@ -24,7 +24,6 @@ class PokemonsNames extends Component<object, State> {
       .then(res => res.json())
       .then(data => {
         this.setState({ pokemons: data.results, loading: false });
-        console.log(data.results, data.results.length);
       })
       .catch(error => {
         console.error('Ошибка при загрузке покемонов:', error);
