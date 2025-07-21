@@ -59,4 +59,22 @@ describe('Top-controls component', () => {
     });
     expect(searchInput.value).toBe('teest');
   });
+
+  it('Saves search term to localStorage when search button is clicked', async () => {
+    jest.spyOn(Storage.prototype, 'setItem');
+    await act(async () => {
+      render(<SearchBar />);
+    });
+    const searchButton = screen.getByTestId('search-button');
+    const searchInput = screen.getByPlaceholderText(
+      /Enter the Pokémon's name/i
+    ) as HTMLInputElement;
+    await act(async () => {
+      fireEvent.change(searchInput, { target: { value: 'pikachu' } });
+    });
+    await act(async () => {
+      fireEvent.click(searchButton);
+    });
+    expect(localStorage.setItem).toHaveBeenCalledWith('pokemon', 'pikachu');
+  });
 });
