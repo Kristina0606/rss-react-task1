@@ -72,6 +72,7 @@ class SearchBar extends Component<object, SearchState> {
             id="search-form"
             onSubmit={this.handleSubmit}
             className="flex align-center justify-center"
+            data-testid="search-form"
           >
             <input
               type="search"
