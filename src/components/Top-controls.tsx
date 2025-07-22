@@ -72,6 +72,7 @@ class SearchBar extends Component<object, SearchState> {
             id="search-form"
             onSubmit={this.handleSubmit}
             className="flex align-center justify-center"
+            data-testid="search-form"
           >
             <input
               type="search"
@@ -82,6 +83,7 @@ class SearchBar extends Component<object, SearchState> {
             <button
               type="submit"
               className="cursor-pointer bg-blue-500 text-white w-8 h-8 rounded-sm p-1"
+              data-testid="search-button"
             >
               <img src={searchIcon} alt="search-icon" />
             </button>
