@@ -1,5 +1,5 @@
 import ErrorBoundary from '../components/ErrorBoundary';
-import PokemonsNames from '../components/Results';
+import PokemonsNames2 from '../components/Results';
 import { FC } from 'react';
 import { Outlet } from 'react-router-dom';
 
@@ -8,7 +8,7 @@ const Layout: FC = () => {
     <div>
       <ErrorBoundary>
         <header>
-          <PokemonsNames />
+          <PokemonsNames2 />
         </header>
         <main>
           <Outlet />
