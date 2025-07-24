@@ -4,7 +4,8 @@ import { createMemoryRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router';
 import NotFoundPage from '../pages/NotFoundPage';
 
-const fakeData = [
+// eslint-disable-next-line jest/no-export
+export const fakeData = [
   { name: 'bulbasaur', url: 'https://pokeapi.co/api/v2/pokemon/1/' },
   { name: 'ivysaur', url: 'https://pokeapi.co/api/v2/pokemon/2/' },
   { name: 'venusaur', url: 'https://pokeapi.co/api/v2/pokemon/3/' },

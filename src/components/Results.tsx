@@ -7,16 +7,17 @@ interface Pokemon {
   url: string;
 }
 
-export const pokemonLoader: LoaderFunction = async (): Promise<Pokemon> => {
-  try {
-    const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon', {
-      params: { limit: 15, offset: 0 },
-    });
-    return data.results;
-  } catch {
-    throw new Error('Не удалось загрузить список покемонов');
-  }
-};
+export const pokemonsNamesLoader: LoaderFunction =
+  async (): Promise<Pokemon> => {
+    try {
+      const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon', {
+        params: { limit: 15, offset: 0 },
+      });
+      return data.results;
+    } catch {
+      throw new Error('Не удалось загрузить список покемонов');
+    }
+  };
 
 const PokemonsNames2: FC = () => {
   const pokemonsData: Pokemon[] = useLoaderData();

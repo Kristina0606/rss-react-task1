@@ -6,12 +6,37 @@ import {
   waitFor,
 } from '@testing-library/react';
 import SearchBar from '../components/Top-controls';
+import PokemonsNames2 from '../components/Results';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import { fakeData } from './Results.test';
+import PokemonSearch from '../components/Top-controls';
 
 describe('Top-controls component', () => {
-  it('Renders search input and search button', () => {
-    render(<SearchBar />);
+  it('Renders search input and search button', async () => {
+    const fakeRouter = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <PokemonsNames2 />,
+          loader: () => fakeData,
+          HydrateFallback: () => <p>HydrateFallback...</p>,
+          children: [
+            {
+              index: true,
+              element: <PokemonSearch />,
+            },
+          ],
+        },
+      ],
+      {
+        initialEntries: ['/'],
+      }
+    );
+    await act(async () => {
+      render(<RouterProvider router={fakeRouter} />);
+    });
 
-    const searchInput = screen.getByPlaceholderText(
+    const searchInput = await screen.getByPlaceholderText(
       /Enter the Pokémon's name/i
     );
     expect(searchInput).toBeInTheDocument();

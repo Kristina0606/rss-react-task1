@@ -5,7 +5,8 @@ import { createBrowserRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router';
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFoundPage';
-import { pokemonLoader } from './components/Results';
+import { pokemonsNamesLoader } from './components/Results';
+import SearchBar, { pokemonLSLoader } from './components/Top-controls';
 
 const router = createBrowserRouter(
   [
@@ -13,8 +14,15 @@ const router = createBrowserRouter(
       path: '/',
       element: <Layout />,
       errorElement: <NotFound />,
-      loader: pokemonLoader,
+      loader: pokemonsNamesLoader,
       HydrateFallback: () => <p>HydrateFallback...</p>,
+      children: [
+        {
+          index: true,
+          element: <SearchBar />,
+          loader: pokemonLSLoader,
+        },
+      ],
     },
   ],
   {
