@@ -7,6 +7,7 @@ import Layout from './pages/Layout';
 import NotFound from './pages/NotFoundPage';
 import { pokemonsNamesLoader } from './components/Results';
 import SearchBar, { pokemonLSLoader } from './components/Top-controls';
+import { ClipLoader } from 'react-spinners';
 
 const router = createBrowserRouter(
   [
@@ -15,7 +16,11 @@ const router = createBrowserRouter(
       element: <Layout />,
       errorElement: <NotFound />,
       loader: pokemonsNamesLoader,
-      HydrateFallback: () => <p>HydrateFallback...</p>,
+      HydrateFallback: () => (
+        <div className="flex items-center justify-center h-screen">
+          <ClipLoader loading={true} size={50} />
+        </div>
+      ),
       children: [
         {
           index: true,
