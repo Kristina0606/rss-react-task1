@@ -33,7 +33,6 @@ const PokemonSearch: FC = () => {
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
-  console.log(currentPokemon);
 
   useEffect(() => {
     if (pokemonLoaderData) {
