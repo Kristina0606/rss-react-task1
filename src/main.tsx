@@ -26,10 +26,8 @@ const router = createBrowserRouter(
           element: <HomePage />,
           loader: pokemonsNamesLoader,
         },
-        { path: '*', element: <NotFound /> },
       ],
     },
-    { path: '*', element: <NotFound /> },
   ],
   {
     basename: '/rss-react-task1',
