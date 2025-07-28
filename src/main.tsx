@@ -30,7 +30,7 @@ const router = createBrowserRouter(
     },
   ],
   {
-    basename: '/rss-react-task1',
+    basename: '/rss-react-task1/',
   }
 );
 

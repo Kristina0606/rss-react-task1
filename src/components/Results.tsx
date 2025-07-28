@@ -1,7 +1,8 @@
-import { FC, useState } from 'react';
+import { FC, useEffect, useState } from 'react';
 
 import PokemonsUI from './Pokemons';
 import Pagination from './Pagination';
+import { useSearchParams } from 'react-router-dom';
 
 export interface Pokemon {
   name: string;
@@ -14,15 +15,26 @@ export interface PokemonsNames2Props {
 
 const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
   const [pokemons] = useState(pokemonsData);
-  const [currentPage, setCurrentPage] = useState(1);
   const [pokemonCountOnPage] = useState(5);
+
+  const [searchParams, setsearchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get('page')) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
+
+  useEffect(() => {
+    if (initialPage != currentPage) {
+      setCurrentPage(initialPage);
+    }
+  }, [initialPage]);
 
   const lastPokemonIndex = currentPage * pokemonCountOnPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonCountOnPage;
-  console.log(pokemons);
   const currentPokemons = pokemons.slice(firstPokemonIndex, lastPokemonIndex);
 
-  const paginate = (currentNumber: number) => setCurrentPage(currentNumber);
+  const paginate = (currentNumber: number) => {
+    setCurrentPage(currentNumber);
+    setsearchParams({ page: String(currentNumber) });
+  };
   return (
     <div className="flex justify-center items-center flex-col">
       <div
