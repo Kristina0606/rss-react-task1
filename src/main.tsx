@@ -5,9 +5,9 @@ import { createBrowserRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router';
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFoundPage';
-import { pokemonsNamesLoader } from './components/Results';
-import SearchBar, { pokemonLSLoader } from './components/Top-controls';
+import { pokemonsNamesLoader } from './pages/HomePage';
 import { ClipLoader } from 'react-spinners';
+import HomePage from './pages/HomePage';
 
 const router = createBrowserRouter(
   [
@@ -15,7 +15,6 @@ const router = createBrowserRouter(
       path: '/',
       element: <Layout />,
       errorElement: <NotFound />,
-      loader: pokemonsNamesLoader,
       HydrateFallback: () => (
         <div className="flex items-center justify-center h-screen">
           <ClipLoader loading={true} size={50} />
@@ -24,9 +23,10 @@ const router = createBrowserRouter(
       children: [
         {
           index: true,
-          element: <SearchBar />,
-          loader: pokemonLSLoader,
+          element: <HomePage />,
+          loader: pokemonsNamesLoader,
         },
+        { path: '*', element: <NotFound /> },
       ],
     },
   ],

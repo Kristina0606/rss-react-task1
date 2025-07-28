@@ -17,6 +17,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorState> {
 
   render(): ReactNode {
     if (this.state.isError) {
+      console.error(console.error());
       return <p>Ошибка! Что то пошло не так...</p>;
     }
     return this.props.children;

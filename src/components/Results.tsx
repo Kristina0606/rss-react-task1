@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { FC, useState } from 'react';
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
+
 import PokemonsUI from './Pokemons';
 import Pagination from './Pagination';
 
@@ -9,26 +8,18 @@ export interface Pokemon {
   url: string;
 }
 
-export const pokemonsNamesLoader: LoaderFunction =
-  async (): Promise<Pokemon> => {
-    try {
-      const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon', {
-        params: { limit: 20, offset: 0 },
-      });
-      return data.results;
-    } catch {
-      throw new Error('Не удалось загрузить список покемонов');
-    }
-  };
+export interface PokemonsNames2Props {
+  pokemonsData: Pokemon[];
+}
 
-const PokemonsNames2: FC = () => {
-  const pokemonsData: Pokemon[] = useLoaderData();
+const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
   const [pokemons] = useState(pokemonsData);
   const [currentPage, setCurrentPage] = useState(1);
   const [pokemonCountOnPage] = useState(5);
 
   const lastPokemonIndex = currentPage * pokemonCountOnPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonCountOnPage;
+  console.log(pokemons);
   const currentPokemons = pokemons.slice(firstPokemonIndex, lastPokemonIndex);
 
   const paginate = (currentNumber: number) => setCurrentPage(currentNumber);

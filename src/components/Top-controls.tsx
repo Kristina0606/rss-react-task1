@@ -1,6 +1,6 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import searchIcon from '../assets/browser_5894365.png';
-import { LoaderFunction, useLoaderData } from 'react-router-dom';
+import { useLoaderData } from 'react-router-dom';
 import axios from 'axios';
 
 export interface PokemonData {
@@ -14,20 +14,9 @@ export interface PokemonData {
   };
 }
 
-export const pokemonLSLoader: LoaderFunction =
-  async (): Promise<PokemonData | null> => {
-    if (localStorage.getItem('pokemon')) {
-      const pokeName = localStorage.getItem('pokemon');
-      const { data } = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${pokeName}`
-      );
-      return data;
-    }
-    return null;
-  };
-
 const PokemonSearch: FC = () => {
   const pokemonLoaderData: PokemonData | null = useLoaderData();
+  console.log(pokemonLoaderData);
   const [currentPokemon, setCurrentPokemon] = useState<PokemonData | null>(
     null
   );
@@ -35,11 +24,19 @@ const PokemonSearch: FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (pokemonLoaderData) {
-      setCurrentPokemon(pokemonLoaderData);
-    }
-    setLoading(false);
-  }, [pokemonLoaderData]);
+    const pokemonLSLoader = async (): Promise<void> => {
+      if (localStorage.getItem('pokemon')) {
+        const pokeName = localStorage.getItem('pokemon');
+        const { data } = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${pokeName}`
+        );
+        setCurrentPokemon(data);
+      }
+      setLoading(false);
+    };
+
+    pokemonLSLoader();
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
