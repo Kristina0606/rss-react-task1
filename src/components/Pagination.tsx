@@ -24,13 +24,12 @@ const Pagination: FC<PaginationProps> = ({
       <ul className="pagination flex gap-2">
         {pageNumbers.map(item => (
           <li key={item} className="page-item">
-            <a
-              href="#"
+            <div
               className="p-2 bg-purple-300 hover:bg-purple-400 text-white rounded border-purple-200 border-2 cursor-pointer"
               onClick={() => paginate(item)}
             >
               {item}
-            </a>
+            </div>
           </li>
         ))}
       </ul>
