@@ -6,15 +6,19 @@ interface PaginationProps {
   totalPokemons: number;
   // eslint-disable-next-line no-unused-vars
   paginate: (_p: number) => void;
+  currentPage: number;
 }
 
 const Pagination: FC<PaginationProps> = ({
   pokemonCountOnPage,
   totalPokemons,
   paginate,
+  currentPage,
 }) => {
   const pageNumbers = [];
   const numOfButtons = Math.ceil(totalPokemons / pokemonCountOnPage);
+
+  console.log(currentPage);
 
   for (let i = 1; i <= numOfButtons; i++) {
     pageNumbers.push(i);
@@ -23,17 +27,28 @@ const Pagination: FC<PaginationProps> = ({
   return (
     <>
       <ul className="pagination flex gap-2">
-        {pageNumbers.map(item => (
-          <li key={item} className="page-item">
-            <Link
-              className="p-2 bg-purple-300 hover:bg-purple-400 text-white rounded border-purple-200 border-2 cursor-pointer"
-              onClick={() => paginate(item)}
-              to={`/?page=${item}`}
-            >
-              {item}
-            </Link>
-          </li>
-        ))}
+        {pageNumbers.map(item => {
+          const isCurrent = currentPage === item;
+          const commonClasses =
+            'p-2 hover:bg-purple-400 text-white rounded border-purple-200 border-2 cursor-pointer';
+          const activeClass = 'bg-purple-500';
+          const inactiveClass = 'bg-purple-300';
+          return (
+            <li key={item} className="page-item">
+              <Link
+                onClick={() => {
+                  paginate(item);
+                }}
+                to={`/?page=${item}`}
+                className={`${commonClasses} ${
+                  isCurrent ? activeClass : inactiveClass
+                }`}
+              >
+                {item}
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </>
   );

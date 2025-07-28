@@ -48,6 +48,7 @@ const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
           pokemonCountOnPage={pokemonCountOnPage}
           totalPokemons={pokemonsData.length}
           paginate={paginate}
+          currentPage={currentPage}
         />
       </div>
     </div>
