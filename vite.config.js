@@ -5,7 +5,7 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   base: '/rss-react-task1/',
   build: {
-    outDir: 'build',
+    outDir: 'dist',
   },
   plugins: [tailwindcss(), react()],
 });
