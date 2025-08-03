@@ -1,7 +1,9 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import searchIcon from '../assets/browser_5894365.png';
-import { useLoaderData } from 'react-router-dom';
 import axios from 'axios';
+import PokemonCard from './PokemonCard';
+import DetailView from './DataView/DetailView';
+import { useSearchParams } from 'react-router-dom';
 
 export interface PokemonData {
   id: number;
@@ -12,20 +14,34 @@ export interface PokemonData {
   sprites: {
     front_default: string | undefined;
   };
+  types: { slot: number; type: { name: string; url: string } }[];
+  height: number;
+  weight: number;
+  base_experience: number;
+  abilities: { ability: { name: string; url: string } }[];
+  stats: { base_stat: number; stat: { name: string } }[];
+  moves: { move: { name: string; url: string } }[];
 }
 
 const PokemonSearch: FC = () => {
-  const pokemonLoaderData: PokemonData | null = useLoaderData();
-  console.log(pokemonLoaderData);
   const [currentPokemon, setCurrentPokemon] = useState<PokemonData | null>(
     null
   );
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
+  const [searchParams, setsearchParams] = useSearchParams();
 
   useEffect(() => {
     const pokemonLSLoader = async (): Promise<void> => {
-      if (localStorage.getItem('pokemon')) {
+      if (searchParams.has('pokemon')) {
+        const pokeNameParam = searchParams.get('pokemon');
+        const { data } = await axios.get(
+          `https://pokeapi.co/api/v2/pokemon/${pokeNameParam}`
+        );
+        localStorage.setItem('pokemon', data.name);
+        setCurrentPokemon(data);
+      } else if (localStorage.getItem('pokemon')) {
         const pokeName = localStorage.getItem('pokemon');
         const { data } = await axios.get(
           `https://pokeapi.co/api/v2/pokemon/${pokeName}`
@@ -34,9 +50,18 @@ const PokemonSearch: FC = () => {
       }
       setLoading(false);
     };
-
     pokemonLSLoader();
   }, []);
+
+  const addParams = () => {
+    const newParams = new URLSearchParams(searchParams);
+    newParams.set('pokemon', String(currentPokemon!.id));
+    setsearchParams(newParams);
+  };
+
+  const toggleIsOpen = () => {
+    setIsOpen(!isOpen);
+  };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -56,6 +81,7 @@ const PokemonSearch: FC = () => {
       );
       localStorage.setItem('pokemon', name);
       setCurrentPokemon(data);
+      addParams();
       form.reset();
     } catch {
       setError('Покемон не найден');
@@ -114,38 +140,22 @@ const PokemonSearch: FC = () => {
           </svg>
         </div>
       ) : (
-        <div className="pokemon-block">
+        <div className="pokemon-block flex justify-center">
           {error && (
             <div className="text-sm font-light text-center m-10">{error}</div>
           )}
           {currentPokemon && (
-            <div className="flex justify-start items-center flex-col">
-              <img
-                src={currentPokemon.sprites.front_default}
-                alt={currentPokemon.species.name}
-                className="mt-2 w-36 h-36"
+            <>
+              <PokemonCard
+                currentPokemon={currentPokemon}
+                toggleIsOpenCard={toggleIsOpen}
+              />{' '}
+              <DetailView
+                isOpen={isOpen}
+                toggleIsOpen={toggleIsOpen}
+                currentPokemon={currentPokemon}
               />
-              <div
-                key={currentPokemon.species.name}
-                className="font-extrabold text-center uppercase tracking-wide text-yellow-400 drop-shadow-md"
-              >
-                {currentPokemon.species.name}
-              </div>
-              <div
-                key={currentPokemon.id}
-                className="font-extrabold text-center uppercase tracking-wide text-yellow-400 drop-shadow-md"
-              >
-                {' '}
-                id:
-                {currentPokemon.id}
-              </div>
-              <div className="text-center m-5">
-                <button className="text-center cursor-pointer border p-1 text-sm font-light group relative h-12 overflow-hidden rounded-md bg-blue-400 px-4 text-neutral-50 transition">
-                  <span>Read more...</span>
-                  <div className="absolute inset-0 h-full w-0 bg-white/30 transition-[width] group-hover:w-full"></div>
-                </button>
-              </div>
-            </div>
+            </>
           )}
         </div>
       )}
