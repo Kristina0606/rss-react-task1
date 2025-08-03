@@ -5,13 +5,50 @@ import {
   screen,
   waitFor,
 } from '@testing-library/react';
-import SearchBar from '../components/Top-controls';
+import { pokemonLSLoader } from '../components/Top-controls';
+import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import PokemonSearch from '../components/Top-controls';
+import axios, { AxiosResponse } from 'axios';
+
+const fakePokemon = {
+  id: 1,
+  species: {
+    name: 'pikachu',
+    url: 'string',
+  },
+  sprites: {
+    front_default: 'https://img.pokemon/pikachu.png',
+  },
+};
+
+jest.mock('axios');
+const mockedAxios = axios as jest.Mocked<typeof axios>;
 
 describe('Top-controls component', () => {
-  it('Renders search input and search button', () => {
-    render(<SearchBar />);
+  beforeEach(() => {
+    localStorage.clear();
+    jest.resetAllMocks();
+  });
 
-    const searchInput = screen.getByPlaceholderText(
+  it('Renders search input and search button', async () => {
+    const fakeRouter = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <PokemonSearch />,
+          loader: () => fakePokemon,
+          HydrateFallback: () => <p>HydrateFallback...</p>,
+        },
+      ],
+      {
+        initialEntries: ['/'],
+      }
+    );
+    await act(async () => {
+      render(<RouterProvider router={fakeRouter} />);
+    });
+
+    const searchInput = await screen.getByPlaceholderText(
       /Enter the Pokémon's name/i
     );
     expect(searchInput).toBeInTheDocument();
@@ -23,29 +60,59 @@ describe('Top-controls component', () => {
   it('Displays previously saved search term from localStorage on mount', async () => {
     localStorage.setItem('pokemon', 'pikachu');
 
-    globalThis.fetch = jest.fn(() =>
-      Promise.resolve({
-        json: () =>
-          Promise.resolve({
-            id: 25,
-            species: { name: 'pikachu', url: '' },
-            sprites: { front_default: 'pikachu.png' },
-          }),
-      })
-    ) as jest.Mock;
+    const fakeData = {
+      id: 2,
+      name: 'pikachu',
+      species: { name: 'pikachu', url: 'url' },
+      sprites: { front_default: 'https://img.pokemon/pikachu.png' },
+    };
 
-    render(<SearchBar />);
+    mockedAxios.get.mockResolvedValueOnce({
+      data: fakeData,
+      status: 200,
+      statusText: 'OK',
+      headers: {},
+      config: {},
+    } as AxiosResponse<typeof fakeData>);
 
-    await waitFor(() => {
-      expect(globalThis.fetch).toHaveBeenCalledWith(
-        'https://pokeapi.co/api/v2/pokemon/pikachu'
-      );
+    const fakeRouter = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <PokemonSearch />,
+          loader: pokemonLSLoader,
+
+          HydrateFallback: () => <p>HydrateFallback...</p>,
+        },
+      ],
+      {
+        initialEntries: ['/'],
+      }
+    );
+    await act(async () => {
+      render(<RouterProvider router={fakeRouter} />);
     });
+
+    const pokemonElement = await screen.getByText('pikachu');
+    expect(pokemonElement).toBeInTheDocument();
   });
 
   it('Updates input value when user types', async () => {
+    const fakeRouter = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <PokemonSearch />,
+          loader: () => fakePokemon,
+          HydrateFallback: () => <p>HydrateFallback...</p>,
+        },
+      ],
+      {
+        initialEntries: ['/'],
+      }
+    );
     await act(async () => {
-      render(<SearchBar />);
+      render(<RouterProvider router={fakeRouter} />);
     });
     const testForm = screen.getByTestId('search-form');
     const searchInput = screen.getByPlaceholderText(
@@ -61,9 +128,23 @@ describe('Top-controls component', () => {
   });
 
   it('Saves search term to localStorage when search button is clicked', async () => {
-    jest.spyOn(Storage.prototype, 'setItem');
+    mockedAxios.get.mockResolvedValue({ data: fakePokemon });
+    const setItemSpy = jest.spyOn(Storage.prototype, 'setItem');
+    const fakeRouter = createMemoryRouter(
+      [
+        {
+          path: '/',
+          element: <PokemonSearch />,
+          loader: () => Promise.resolve(fakePokemon),
+          HydrateFallback: () => <p>HydrateFallback...</p>,
+        },
+      ],
+      {
+        initialEntries: ['/'],
+      }
+    );
     await act(async () => {
-      render(<SearchBar />);
+      render(<RouterProvider router={fakeRouter} />);
     });
     const searchButton = screen.getByTestId('search-button');
     const searchInput = screen.getByPlaceholderText(
@@ -75,6 +156,8 @@ describe('Top-controls component', () => {
     await act(async () => {
       fireEvent.click(searchButton);
     });
-    expect(localStorage.setItem).toHaveBeenCalledWith('pokemon', 'pikachu');
+    await waitFor(() => {
+      expect(setItemSpy).toHaveBeenCalledWith('pokemon', 'pikachu');
+    });
   });
 });

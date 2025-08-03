@@ -1,10 +1,46 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import App from './App.js';
 import './index.css';
+import { createBrowserRouter } from 'react-router-dom';
+import { RouterProvider } from 'react-router';
+import Layout from './pages/Layout';
+import NotFound from './pages/NotFoundPage';
+import { pokemonsNamesLoader } from './pages/HomePage';
+import { ClipLoader } from 'react-spinners';
+import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
+
+const router = createBrowserRouter(
+  [
+    {
+      path: '/',
+      element: <Layout />,
+      errorElement: <NotFound />,
+      HydrateFallback: () => (
+        <div className="flex items-center justify-center h-screen">
+          <ClipLoader loading={true} size={50} />
+        </div>
+      ),
+      children: [
+        {
+          index: true,
+          element: <HomePage />,
+          loader: pokemonsNamesLoader,
+        },
+        {
+          path: '/about',
+          element: <AboutPage />,
+        },
+      ],
+    },
+  ],
+  {
+    basename: '/rss-react-task1/',
+  }
+);
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>
-    <App />
+    <RouterProvider router={router} />
   </StrictMode>
 );

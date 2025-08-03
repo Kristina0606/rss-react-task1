@@ -28,6 +28,7 @@ export default tseslint.config(
     ignores: [
       'node_modules',
       'dist',
+      'build',
       'coverage',
       'eslint.config.js',
       'vite.config.js',

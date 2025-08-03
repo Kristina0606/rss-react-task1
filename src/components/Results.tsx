@@ -1,58 +1,58 @@
-import { Component, ReactNode } from 'react';
+import { FC, useEffect, useState } from 'react';
 
-interface Pokemon {
+import PokemonsUI from './Pokemons';
+import Pagination from './Pagination';
+import { useSearchParams } from 'react-router-dom';
+
+export interface Pokemon {
   name: string;
   url: string;
 }
 
-interface State {
-  pokemons: Pokemon[];
-  loading: boolean;
+export interface PokemonsNames2Props {
+  pokemonsData: Pokemon[];
 }
 
-class PokemonsNames extends Component<object, State> {
-  constructor(props: object) {
-    super(props);
-    this.state = {
-      pokemons: [],
-      loading: true,
-    };
-  }
+const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
+  const [pokemons] = useState(pokemonsData);
+  const [pokemonCountOnPage] = useState(5);
 
-  componentDidMount() {
-    fetch('https://pokeapi.co/api/v2/pokemon?limit=15&offset=0')
-      .then(res => res.json())
-      .then(data => {
-        this.setState({ pokemons: data.results, loading: false });
-      })
-      .catch(error => {
-        console.error('Ошибка при загрузке покемонов:', error);
-        this.setState({ loading: false });
-      });
-  }
+  const [searchParams, setsearchParams] = useSearchParams();
+  const initialPage = Number(searchParams.get('page')) || 1;
+  const [currentPage, setCurrentPage] = useState(initialPage);
 
-  render(): ReactNode {
-    const { pokemons, loading } = this.state;
-    return (
+  useEffect(() => {
+    if (initialPage != currentPage) {
+      setCurrentPage(initialPage);
+    }
+  }, [initialPage]);
+
+  const lastPokemonIndex = currentPage * pokemonCountOnPage;
+  const firstPokemonIndex = lastPokemonIndex - pokemonCountOnPage;
+  const currentPokemons = pokemons.slice(firstPokemonIndex, lastPokemonIndex);
+
+  const paginate = (currentNumber: number) => {
+    setCurrentPage(currentNumber);
+    setsearchParams({ page: String(currentNumber) });
+  };
+  return (
+    <div className="flex justify-center items-center flex-col">
       <div
-        className="results flex gap-15 flex-wrap justify-center m-15"
+        className="results flex gap-15 flex-wrap justify-center p-7"
         data-testid="results-block"
       >
-        {loading ? (
-          <p>Загрузка...</p>
-        ) : (
-          pokemons.map(pokemon => (
-            <div
-              key={pokemon.name}
-              className="font-extrabold uppercase tracking-wide text-yellow-400 drop-shadow-md"
-            >
-              {pokemon.name}
-            </div>
-          ))
-        )}
+        <PokemonsUI pokemons={currentPokemons} />
       </div>
-    );
-  }
-}
+      <div className="pb-5">
+        <Pagination
+          pokemonCountOnPage={pokemonCountOnPage}
+          totalPokemons={pokemonsData.length}
+          paginate={paginate}
+          currentPage={currentPage}
+        />
+      </div>
+    </div>
+  );
+};
 
-export default PokemonsNames;
+export default PokemonsNames2;
