@@ -53,7 +53,7 @@ const PokemonSearch: FC = () => {
     pokemonLSLoader();
   }, []);
 
-  const addParams = () => {
+  const addParams = (currentPokemon: PokemonData) => {
     const newParams = new URLSearchParams(searchParams);
     newParams.set('pokemon', String(currentPokemon!.id));
     setsearchParams(newParams);
@@ -81,7 +81,8 @@ const PokemonSearch: FC = () => {
       );
       localStorage.setItem('pokemon', name);
       setCurrentPokemon(data);
-      addParams();
+      addParams(data);
+      console.log('name');
       form.reset();
     } catch {
       setError('Покемон не найден');
