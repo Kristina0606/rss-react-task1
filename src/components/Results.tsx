@@ -38,7 +38,6 @@ const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
   const lastPokemonIndex = currentPage * pokemonCountOnPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonCountOnPage;
   const currentPokemons = pokemons.slice(firstPokemonIndex, lastPokemonIndex);
-  console.log(currentPokemons);
 
   const paginate = (currentNumber: number) => {
     setCurrentPage(currentNumber);

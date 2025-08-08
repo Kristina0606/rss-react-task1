@@ -18,8 +18,6 @@ const Pagination: FC<PaginationProps> = ({
   const pageNumbers = [];
   const numOfButtons = Math.ceil(totalPokemons / pokemonCountOnPage);
 
-  console.log(currentPage);
-
   for (let i = 1; i <= numOfButtons; i++) {
     pageNumbers.push(i);
   }

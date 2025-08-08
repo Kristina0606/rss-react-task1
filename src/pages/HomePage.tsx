@@ -1,30 +1,25 @@
-import { Link, LoaderFunction, useLoaderData } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import PokemonsNames2, { Pokemon } from '../components/Results';
 import { FC } from 'react';
-import axios from 'axios';
 import PokemonSearch from '../components/Top-controls';
-
-export const pokemonsNamesLoader: LoaderFunction = async (): Promise<
-  Pokemon[]
-> => {
-  try {
-    const { data } = await axios.get('https://pokeapi.co/api/v2/pokemon', {
-      params: { limit: 20, offset: 0 },
-    });
-    console.log(data);
-    return data.results;
-  } catch {
-    throw new Error('Не удалось загрузить список покемонов');
-  }
-};
+import { useGetPokemonsQuery } from '../store/pokemonApi';
 
 const HomePage: FC = () => {
-  const pokemonsData: Pokemon[] = useLoaderData<Pokemon[]>();
+  const { data = [], isLoading } = useGetPokemonsQuery({
+    limit: 20,
+    offset: 0,
+  });
+  console.log('data1', data);
+  const pokemonsData: Pokemon[] = data.results;
 
   return (
     <>
       <header>
-        <PokemonsNames2 pokemonsData={pokemonsData} />
+        {isLoading ? (
+          <div>loading...</div>
+        ) : (
+          <PokemonsNames2 pokemonsData={pokemonsData} />
+        )}
       </header>
       <main>
         <div>

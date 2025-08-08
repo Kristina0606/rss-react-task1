@@ -5,7 +5,6 @@ import { createBrowserRouter } from 'react-router-dom';
 import { RouterProvider } from 'react-router';
 import Layout from './pages/Layout';
 import NotFound from './pages/NotFoundPage';
-import { pokemonsNamesLoader } from './pages/HomePage';
 import { ClipLoader } from 'react-spinners';
 import HomePage from './pages/HomePage';
 import AboutPage from './pages/AboutPage';
@@ -27,7 +26,6 @@ const router = createBrowserRouter(
         {
           index: true,
           element: <HomePage />,
-          loader: pokemonsNamesLoader,
         },
         {
           path: '/about',
