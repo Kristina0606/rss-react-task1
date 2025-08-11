@@ -10,6 +10,7 @@ const PokemonCard: FC<PokemonCardProps> = ({
   currentPokemon,
   toggleIsOpenCard,
 }) => {
+  console.log('прилетевший покемон', currentPokemon);
   return (
     <div className="pokemon-card flex w-54 m-2 justify-start items-center flex-col rounded-lg shadow-md p-4 transition-shadow duration-300 hover:shadow-xl">
       <img

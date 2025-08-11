@@ -1,9 +1,9 @@
 import { FC, FormEvent, useEffect, useState } from 'react';
 import searchIcon from '../assets/browser_5894365.png';
-import axios from 'axios';
 import PokemonCard from './PokemonCard';
 import DetailView from './DataView/DetailView';
 import { useSearchParams } from 'react-router-dom';
+import { useLazyGetOnePokemonQuery } from '../store/pokemonApi';
 
 export interface PokemonData {
   id: number;
@@ -28,30 +28,25 @@ const PokemonSearch: FC = () => {
     null
   );
   const [error, setError] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setsearchParams] = useSearchParams();
+  const [pokeNameParam, setPokeNameParam] = useState<string | null>(null);
+  const [trigger, { data, isError, isLoading }] = useLazyGetOnePokemonQuery();
 
   useEffect(() => {
-    const pokemonLSLoader = async (): Promise<void> => {
-      if (searchParams.has('pokemon')) {
-        const pokeNameParam = searchParams.get('pokemon');
-        const { data } = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${pokeNameParam}`
-        );
-        localStorage.setItem('pokemon', data.name);
-        setCurrentPokemon(data);
-      } else if (localStorage.getItem('pokemon')) {
-        const pokeName = localStorage.getItem('pokemon');
-        const { data } = await axios.get(
-          `https://pokeapi.co/api/v2/pokemon/${pokeName}`
-        );
-        setCurrentPokemon(data);
-      }
-      setLoading(false);
-    };
-    pokemonLSLoader();
+    const param = searchParams.get('pokemon');
+    const local = localStorage.getItem('pokemon');
+    if (param) {
+      setPokeNameParam(param);
+    } else if (local) {
+      setPokeNameParam(local);
+    }
   }, []);
+
+  useEffect(() => {
+    triggerFunc(pokeNameParam);
+  }, [pokeNameParam]);
+  console.log('pokemon после', data);
 
   const addParams = (currentPokemon: PokemonData) => {
     const newParams = new URLSearchParams(searchParams);
@@ -61,6 +56,22 @@ const PokemonSearch: FC = () => {
 
   const toggleIsOpen = () => {
     setIsOpen(!isOpen);
+  };
+
+  const triggerFunc = (pokeName: string | null) => {
+    trigger(pokeName)
+      .unwrap()
+      .then(pokemon => {
+        setPokeNameParam(pokeName);
+        localStorage.setItem('pokemon', pokemon.species.name);
+        addParams(pokemon);
+        setCurrentPokemon(pokemon);
+      })
+      .catch(() => {
+        setError('Покемон не найден');
+        setCurrentPokemon(null);
+        localStorage.clear();
+      });
   };
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
@@ -73,24 +84,7 @@ const PokemonSearch: FC = () => {
       setError('Введите имя покемона');
       return;
     }
-
-    try {
-      setLoading(true);
-      const { data } = await axios.get(
-        `https://pokeapi.co/api/v2/pokemon/${name}`
-      );
-      localStorage.setItem('pokemon', name);
-      setCurrentPokemon(data);
-      addParams(data);
-      console.log('name');
-      form.reset();
-    } catch {
-      setError('Покемон не найден');
-      setCurrentPokemon(null);
-      localStorage.clear();
-    } finally {
-      setLoading(false);
-    }
+    triggerFunc(name);
   };
 
   return (
@@ -117,7 +111,7 @@ const PokemonSearch: FC = () => {
           </button>
         </form>
       </div>
-      {loading ? (
+      {isLoading ? (
         <div className="flex justify-center items-center h-40">
           <svg
             className="animate-spin h-10 w-10 text-blue-500"
@@ -142,7 +136,7 @@ const PokemonSearch: FC = () => {
         </div>
       ) : (
         <div className="pokemon-block flex justify-center">
-          {error && (
+          {isError && (
             <div className="text-sm font-light text-center m-10">{error}</div>
           )}
           {currentPokemon && (

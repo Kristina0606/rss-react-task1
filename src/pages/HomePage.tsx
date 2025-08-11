@@ -5,11 +5,14 @@ import PokemonSearch from '../components/Top-controls';
 import { useGetPokemonsQuery } from '../store/pokemonApi';
 
 const HomePage: FC = () => {
-  const { data = [], isLoading } = useGetPokemonsQuery({
-    limit: 20,
+  const {
+    data = [],
+    isLoading,
+    isError,
+  } = useGetPokemonsQuery({
+    limit: 50,
     offset: 0,
   });
-  console.log('data1', data);
   const pokemonsData: Pokemon[] = data.results;
 
   return (
@@ -17,6 +20,8 @@ const HomePage: FC = () => {
       <header>
         {isLoading ? (
           <div>loading...</div>
+        ) : isError ? (
+          <div>error</div>
         ) : (
           <PokemonsNames2 pokemonsData={pokemonsData} />
         )}
