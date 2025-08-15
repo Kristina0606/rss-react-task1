@@ -4,7 +4,7 @@ import PokemonsUI from './Pokemons';
 import Pagination from './Pagination';
 import { useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { RootState } from '../store/store';
 import { unselectAllItems } from '../store/selectCheckboxSlice';
 
 export interface Pokemon {
