@@ -30,7 +30,7 @@ const PokemonSearch: FC = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [pokeNameParam, setPokeNameParam] = useState<string | null>(null);
-  const [trigger, { data, isError, isLoading }] = useLazyGetOnePokemonQuery();
+  const [trigger, { isError, isLoading }] = useLazyGetOnePokemonQuery();
 
   useEffect(() => {
     const param = searchParams!.get('pokemon');
@@ -110,7 +110,7 @@ const PokemonSearch: FC = () => {
             className="cursor-pointer bg-blue-500 text-white w-8 h-8 rounded-sm p-1"
             data-testid="search-button"
           >
-            <img src={searchIcon} alt="search-icon" />
+            <img src={searchIcon.src} alt="search-icon" />
           </button>
         </form>
       </div>

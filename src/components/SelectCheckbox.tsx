@@ -1,6 +1,6 @@
 import { FC } from 'react';
 import { useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { RootState } from '../store/store';
 
 interface SelectCheckboxProps {
   onClick: () => void;
@@ -14,7 +14,7 @@ export const SelectCheckbox: FC<SelectCheckboxProps> = ({ onClick, name }) => {
   const isChecked = checkedItems.includes(name);
   return (
     <>
-      <input type="checkbox" onClick={onClick} checked={isChecked} />
+      <input type="checkbox" onChange={onClick} checked={isChecked} />
     </>
   );
 };

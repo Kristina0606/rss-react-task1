@@ -20,6 +20,7 @@
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
+    "@tailwindcss/postcss": "^4.1.12",
     "@tailwindcss/vite": "^4.1.11",
     "axios": "^1.11.0",
     "localforage": "^1.10.0",
@@ -31,8 +32,7 @@
     "react-redux": "^9.2.0",
     "react-router-dom": "^7.7.0",
     "react-spinners": "^0.17.0",
-    "sort-by": "^0.0.2",
-    "tailwindcss": "^4.1.11"
+    "sort-by": "^0.0.2"
   },
   "devDependencies": {
     "@babel/preset-env": "^7.28.0",
@@ -46,6 +46,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "@vitejs/plugin-react": "^4.5.2",
+    "autoprefixer": "^10.4.21",
     "babel-jest": "^30.0.4",
     "eslint": "^9.31.0",
     "eslint-config-prettier": "^10.1.5",
@@ -62,7 +63,9 @@
     "jest-environment-jsdom": "^30.0.4",
     "jest-svg-transformer": "^1.0.0",
     "lint-staged": "^16.1.2",
+    "postcss": "^8.5.6",
     "prettier": "^3.6.2",
+    "tailwindcss": "^4.1.12",
     "typescript": "^5.8.3",
     "typescript-eslint": "^8.36.0",
     "vite": "^7.0.0",
