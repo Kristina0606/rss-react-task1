@@ -4,9 +4,8 @@
 module.exports = {
   reactStrictMode: true,
 
-  appDir: true,
-
   images: {
     domains: ['example.com'],
   },
+  basePath: process.env.NEXT_PUBLIC_BASE_PATH,
 };

@@ -1,5 +1,6 @@
 import { Metadata } from 'next';
 import React from 'react';
+import ProviderClient from './provider';
 
 export const metadata: Metadata = {
   title: 'My Pokemon App',
@@ -17,7 +18,7 @@ export default function RootLayout({
         <link rel="icon" type="image/svg+xml" href="/vite.svg" />
       </head>
       <body>
-        <div id="root">{children}</div>
+        <ProviderClient>{children}</ProviderClient>
         <script type="module" src="/src/main.jsx"></script>
       </body>
     </html>

@@ -6,8 +6,9 @@
   "type": "module",
   "scripts": {
     "format": "prettier --write \"src/**/*.{js,jsx,ts,tsx,json,css,md}\"",
-    "dev": "vite",
-    "build": "vite build && cp dist/index.html dist/404.html",
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "lint": "eslint .",
     "preview": "vite preview",
     "prepare": "husky",
