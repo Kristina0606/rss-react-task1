@@ -19,7 +19,6 @@ export default function RootLayout({
       </head>
       <body>
         <ProviderClient>{children}</ProviderClient>
-        <script type="module" src="/src/main.jsx"></script>
       </body>
     </html>
   );
