@@ -11,7 +11,6 @@
     "start": "next start",
     "lint": "eslint .",
     "preview": "vite preview",
-    "prepare": "husky",
     "format:fix": "prettier --write .",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist",
