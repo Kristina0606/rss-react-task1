@@ -3,7 +3,7 @@
 import dynamic from 'next/dynamic';
 import ProviderClient from '../provider';
 
-const App = dynamic(() => import('../../pages/HomePage'), { ssr: false });
+const App = dynamic(() => import('../HomePage'), { ssr: false });
 
 export function ClientOnly() {
   return (

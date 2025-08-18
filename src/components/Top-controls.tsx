@@ -71,7 +71,6 @@ const PokemonSearch: FC = () => {
       .catch(() => {
         setError('Покемон не найден');
         setCurrentPokemon(null);
-        window.localStorage.removeItem('pokemon');
       });
   };
 
