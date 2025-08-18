@@ -1,6 +1,6 @@
 [build]
   base    = "."                
-  publish = ".netlify/next"    
+  publish = ".next"    
    command = "mkdir -p .netlify/next && npm run build"
 
 [build.environment]
