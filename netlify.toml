@@ -1,7 +1,7 @@
 [build]
   base    = "."                
   publish = ".netlify/next"    
-  command = "npm run build"
+   command = "mkdir -p .netlify/next && npm run build"
 
 [build.environment]
   NODE_ENV               = "production"
