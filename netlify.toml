@@ -1,0 +1,11 @@
+[build]
+  base    = "."                
+  publish = ".next"    
+   command = "mkdir -p .netlify/next && npm run build"
+
+[build.environment]
+  NODE_ENV               = "production"
+  NEXT_PUBLIC_BASE_PATH  = "/rss-react-task1"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

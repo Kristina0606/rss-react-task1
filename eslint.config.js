@@ -35,6 +35,7 @@ export default tseslint.config(
       'babel.config.cjs',
       'jest.config.js',
       'setup-tests.ts',
+      'postcss.config.mjs',
     ],
   },
   {

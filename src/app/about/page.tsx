@@ -1,7 +1,12 @@
+'use client';
+
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
+import '../../index.css';
+import { useRouter } from 'next/navigation';
 
 const AboutPage: FC = () => {
+  const router = useRouter();
+
   return (
     <div className="flex flex-col justify-center items-center h-screen text-sm font-light gap-2">
       <div className="about-me">
@@ -13,9 +18,12 @@ const AboutPage: FC = () => {
       <a className="underline" href="https://rs.school/courses/reactjs">
         Link to RSSchool course
       </a>
-      <Link className="text-blue-500" to={'/'}>
+      <div
+        className="text-blue-500 cursor-pointer"
+        onClick={() => router.back()}
+      >
         &#x2190; back to the home page
-      </Link>
+      </div>
     </div>
   );
 };

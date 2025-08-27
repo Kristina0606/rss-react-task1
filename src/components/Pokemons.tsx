@@ -2,7 +2,7 @@ import { FC, ReactNode } from 'react';
 import { Pokemon } from './Results';
 import { SelectCheckbox } from './SelectCheckbox';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { RootState } from '../store/store';
 import { toggleIsCheckedItem } from '../store/selectCheckboxSlice';
 
 interface PokemonsUIProps {

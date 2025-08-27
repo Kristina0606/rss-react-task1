@@ -1,5 +1,4 @@
 import { FC } from 'react';
-import { Link } from 'react-router-dom';
 
 interface PaginationProps {
   pokemonCountOnPage: number;
@@ -33,17 +32,16 @@ const Pagination: FC<PaginationProps> = ({
           const inactiveClass = 'bg-purple-300';
           return (
             <li key={item} className="page-item">
-              <Link
+              <button
                 onClick={() => {
                   paginate(item);
                 }}
-                to={`/?page=${item}`}
                 className={`${commonClasses} ${
                   isCurrent ? activeClass : inactiveClass
                 }`}
               >
                 {item}
-              </Link>
+              </button>
             </li>
           );
         })}

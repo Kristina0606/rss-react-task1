@@ -1,19 +1,16 @@
+'use client';
+
 import { FC, FormEvent, useEffect, useState } from 'react';
+import { useSearchParams, useRouter } from 'next/navigation';
 import searchIcon from '../assets/browser_5894365.png';
 import PokemonCard from './PokemonCard';
 import DetailView from './DataView/DetailView';
-import { useSearchParams } from 'react-router-dom';
 import { useLazyGetOnePokemonQuery } from '../store/pokemonApi';
 
 export interface PokemonData {
   id: number;
-  species: {
-    name: string;
-    url: string;
-  };
-  sprites: {
-    front_default: string | undefined;
-  };
+  species: { name: string; url: string };
+  sprites: { front_default: string | undefined };
   types: { slot: number; type: { name: string; url: string } }[];
   height: number;
   weight: number;
@@ -29,62 +26,67 @@ const PokemonSearch: FC = () => {
   );
   const [error, setError] = useState<string | null>(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [searchParams, setsearchParams] = useSearchParams();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const [pokeNameParam, setPokeNameParam] = useState<string | null>(null);
-  const [trigger, { data, isError, isLoading }] = useLazyGetOnePokemonQuery();
+  const [trigger, { isError, isLoading }] = useLazyGetOnePokemonQuery();
 
   useEffect(() => {
-    const param = searchParams.get('pokemon');
-    const local = localStorage.getItem('pokemon');
+    const param = searchParams!.get('pokemon');
+    const local = window.localStorage.getItem('pokemon');
+
     if (param) {
       setPokeNameParam(param);
     } else if (local) {
       setPokeNameParam(local);
     }
-  }, []);
+  }, [searchParams]);
 
   useEffect(() => {
+    if (!pokeNameParam) return;
     triggerFunc(pokeNameParam);
   }, [pokeNameParam]);
-  console.log('pokemon после', data);
 
   const addParams = (currentPokemon: PokemonData) => {
-    const newParams = new URLSearchParams(searchParams);
-    newParams.set('pokemon', String(currentPokemon!.id));
-    setsearchParams(newParams);
+    router.replace(
+      `?pokemon=${encodeURIComponent(currentPokemon.species.name)}`,
+      { scroll: false }
+    );
   };
 
   const toggleIsOpen = () => {
-    setIsOpen(!isOpen);
+    setIsOpen(open => !open);
   };
 
-  const triggerFunc = (pokeName: string | null) => {
+  const triggerFunc = (pokeName: string) => {
     trigger(pokeName)
       .unwrap()
       .then(pokemon => {
-        setPokeNameParam(pokeName);
-        localStorage.setItem('pokemon', pokemon.species.name);
-        addParams(pokemon);
+        setError(null);
         setCurrentPokemon(pokemon);
+        window.localStorage.setItem('pokemon', pokemon.species.name);
+        addParams(pokemon);
       })
       .catch(() => {
         setError('Покемон не найден');
         setCurrentPokemon(null);
-        localStorage.clear();
       });
   };
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError(null);
-    const form = e.currentTarget;
-    const formData = new FormData(form);
+
+    const formData = new FormData(e.currentTarget);
     const name = formData.get('name')?.toString().toLowerCase().trim();
+
     if (!name) {
       setError('Введите имя покемона');
       return;
     }
-    triggerFunc(name);
+
+    setPokeNameParam(name);
   };
 
   return (
@@ -107,10 +109,11 @@ const PokemonSearch: FC = () => {
             className="cursor-pointer bg-blue-500 text-white w-8 h-8 rounded-sm p-1"
             data-testid="search-button"
           >
-            <img src={searchIcon} alt="search-icon" />
+            <img src={searchIcon.src} alt="search-icon" />
           </button>
         </form>
       </div>
+
       {isLoading ? (
         <div className="flex justify-center items-center h-40">
           <svg
@@ -144,7 +147,7 @@ const PokemonSearch: FC = () => {
               <PokemonCard
                 currentPokemon={currentPokemon}
                 toggleIsOpenCard={toggleIsOpen}
-              />{' '}
+              />
               <DetailView
                 isOpen={isOpen}
                 toggleIsOpen={toggleIsOpen}

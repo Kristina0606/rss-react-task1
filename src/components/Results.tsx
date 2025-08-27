@@ -1,10 +1,11 @@
-import { FC, useEffect, useState } from 'react';
+'use client';
 
+import { FC, useEffect, useState } from 'react';
 import PokemonsUI from './Pokemons';
 import Pagination from './Pagination';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams, useRouter } from 'next/navigation';
 import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from 'store/store';
+import { RootState } from '../store/store';
 import { unselectAllItems } from '../store/selectCheckboxSlice';
 
 export interface Pokemon {
@@ -20,8 +21,10 @@ const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
   const [pokemons] = useState(pokemonsData);
   const [pokemonCountOnPage] = useState(5);
 
-  const [searchParams, setsearchParams] = useSearchParams();
-  const initialPage = Number(searchParams.get('page')) || 1;
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const initialPage = Number(searchParams!.get('page')) || 1;
   const [currentPage, setCurrentPage] = useState(initialPage);
 
   const checkedItems = useSelector(
@@ -33,7 +36,7 @@ const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
     if (initialPage != currentPage) {
       setCurrentPage(initialPage);
     }
-  }, [initialPage]);
+  }, [initialPage, currentPage]);
 
   const lastPokemonIndex = currentPage * pokemonCountOnPage;
   const firstPokemonIndex = lastPokemonIndex - pokemonCountOnPage;
@@ -41,7 +44,7 @@ const PokemonsNames2: FC<PokemonsNames2Props> = ({ pokemonsData }) => {
 
   const paginate = (currentNumber: number) => {
     setCurrentPage(currentNumber);
-    setsearchParams({ page: String(currentNumber) });
+    router.replace(`?page=${currentNumber}`, { scroll: false });
   };
   return (
     <div className="flex justify-center items-center flex-col">
